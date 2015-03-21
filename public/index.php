@@ -35,7 +35,6 @@ else {
             Sorry for the temporary inconvenience.');
     });
 }
-
 $whoops->register();
 
 

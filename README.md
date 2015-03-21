@@ -3,5 +3,3 @@
 # PHP Composer Boilerplate
 
 Boilerplate for quick code experiments.
-
-
