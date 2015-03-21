@@ -15,11 +15,11 @@ require_once ROOT . '/vendor/autoload.php';
 Dotenv::load(ROOT);
 
 $logger = App\Logger::getInstance();
-$whoops = new \Whoops\Run;
+$whoops = new Whoops\Run;
 if (getenv('APP_DEBUG') === 'true') {
     ini_set('display_errors', 'On');
 
-    $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+    $whoops->pushHandler(new Whoops\Handler\PrettyPageHandler);
     $whoops->pushHandler(function ($exception) use ($logger) {
         $logger->addError((string) $exception);
     });
@@ -44,7 +44,7 @@ $whoops->register();
 
 header('Content-Type: text/html; charset=utf-8');
 
-$klein = new \Klein\Klein();
+$klein = new Klein\Klein();
 
 $klein->respond('GET', '/', function () {
 
