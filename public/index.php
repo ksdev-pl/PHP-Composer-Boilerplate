@@ -6,7 +6,7 @@
 
 error_reporting(E_ALL);
 
-date_default_timezone_set('Europe/Warsaw');
+date_default_timezone_set('UTC');
 
 define('ROOT', dirname(__DIR__));
 
