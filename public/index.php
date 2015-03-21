@@ -83,8 +83,6 @@ $klein->respond('GET', '/', function () {
 ──██────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
     </pre>';
 
-    $db = new App\DB('localhost', 'root', 'root', 'app');
-
 });
 
 $klein->dispatch();
