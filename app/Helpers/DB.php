@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Helpers;
 
 use PDO;
 use PDOException;

@@ -8,13 +8,15 @@ error_reporting(E_ALL);
 
 date_default_timezone_set('UTC');
 
-define('ROOT', dirname(__DIR__));
+define('ROOT',  dirname(__DIR__) . '/');
+define('APP',   ROOT . 'app/');
+define('VIEWS', APP . 'views/');
 
-require_once ROOT . '/vendor/autoload.php';
+require_once ROOT . 'vendor/autoload.php';
 
 Dotenv::load(ROOT);
 
-$logger = App\Logger::getInstance();
+$logger = App\Helpers\Logger::getInstance();
 $whoops = new Whoops\Run;
 if (getenv('APP_DEBUG') === 'true') {
     ini_set('display_errors', 'On');
@@ -37,16 +39,18 @@ else {
 }
 $whoops->register();
 
+
 /********************************************************************
  * Route all the things!
  */
 
 $dispatcher = FastRoute\cachedDispatcher(
     function (FastRoute\RouteCollector $r) {
-
-        $r->addRoute('GET', '/', 'getIndex');
-
-    }, ['cacheFile' => ROOT . '/storage/cache/routes']
+        require_once APP . 'routes.php';
+    }, [
+        'cacheFile' => ROOT . 'storage/cache/routes',
+        'cacheDisabled' => getenv('APP_DEBUG') === 'true'
+    ]
 );
 
 $routeInfo = $dispatcher->dispatch(
@@ -64,48 +68,15 @@ switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
-        $handler($vars);
+        if (strpos($handler, '::') !== false) {
+            list($class, $method) = explode('::', $handler);
+            $class = 'App\Controllers\\' . $class;
+            $obj = new $class();
+            $obj->$method($vars);
+        }
+        else {
+            $function = 'App\\' . $handler;
+            $function($vars);
+        }
         break;
-}
-
-/********************************************************************
- * Code all the things!
- */
-
-function getIndex() {
-    header('Content-Type: text/html; charset=utf-8');
-
-    echo '<pre>
-─────────────────────────────▄██▄
-─────────────────────────────▀███
-────────────────────────────────█
-───────────────▄▄▄▄▄────────────█
-──────────────▀▄────▀▄──────────█
-──────────▄▀▀▀▄─█▄▄▄▄█▄▄─▄▀▀▀▄──█
-─────────█──▄──█────────█───▄─█─█
-─────────▀▄───▄▀────────▀▄───▄▀─█
-──────────█▀▀▀────────────▀▀▀─█─█
-──────────█───────────────────█─█
-▄▀▄▄▀▄────█──▄█▀█▀█▀█▀█▀█▄────█─█
-█▒▒▒▒█────█──█████████████▄───█─█
-█▒▒▒▒█────█──██████████████▄──█─█
-█▒▒▒▒█────█───██████████████▄─█─█
-█▒▒▒▒█────█────██████████████─█─█
-█▒▒▒▒█────█───██████████████▀─█─█
-█▒▒▒▒█───██───██████████████──█─█
-▀████▀──██▀█──█████████████▀──█▄█
-──██───██──▀█──█▄█▄█▄█▄█▄█▀──▄█▀
-──██──██────▀█─────────────▄▀▓█
-──██─██──────▀█▀▄▄▄▄▄▄▄▄▄▀▀▓▓▓█
-──████────────█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──███─────────█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──██──────────█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──██──────────█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──██─────────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──██────────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█
-──██───────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
-──██──────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
-──██─────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
-──██────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
-    </pre>';
 }
