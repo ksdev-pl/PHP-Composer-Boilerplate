@@ -1,9 +1,9 @@
 <?php namespace App\Controllers;
 
-class PagesController
+class PagesController extends Controller
 {
     public function home()
     {
-        require_once VIEWS . 'home.php';
+        echo $this->view->render('home');
     }
 }
