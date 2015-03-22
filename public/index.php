@@ -37,16 +37,43 @@ else {
 }
 $whoops->register();
 
+/********************************************************************
+ * Route all the things!
+ */
+
+$dispatcher = FastRoute\cachedDispatcher(
+    function (FastRoute\RouteCollector $r) {
+
+        $r->addRoute('GET', '/', 'getIndex');
+
+    }, ['cacheFile' => ROOT . '/storage/cache/routes']
+);
+
+$routeInfo = $dispatcher->dispatch(
+    $_SERVER['REQUEST_METHOD'],
+    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+);
+switch ($routeInfo[0]) {
+    case FastRoute\Dispatcher::NOT_FOUND:
+        http_response_code(404);
+        break;
+    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        http_response_code(405);
+        break;
+    case FastRoute\Dispatcher::FOUND:
+        $handler = $routeInfo[1];
+        $vars = $routeInfo[2];
+        $handler($vars);
+        break;
+}
 
 /********************************************************************
  * Code all the things!
  */
 
-header('Content-Type: text/html; charset=utf-8');
-
-$klein = new Klein\Klein();
-
-$klein->respond('GET', '/', function () {
+function getIndex() {
+    header('Content-Type: text/html; charset=utf-8');
 
     echo '<pre>
 ─────────────────────────────▄██▄
@@ -81,7 +108,4 @@ $klein->respond('GET', '/', function () {
 ──██─────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
 ──██────▐█▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█▌
     </pre>';
-
-});
-
-$klein->dispatch();
+}
