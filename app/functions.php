@@ -3,5 +3,3 @@
 function getHome() {
     echo 'Code all the things!';
 }
-
-

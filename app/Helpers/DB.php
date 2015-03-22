@@ -13,23 +13,18 @@ class DB
     private $stmt;
 
     /**
-     * @param $host
-     * @param $user
-     * @param $pass
-     * @param $dbname
-     *
      * @throws PDOException  Remember to catch this exception. Error could reveal password!
      */
-    public function __construct($host, $user, $pass, $dbname)
+    public function __construct()
     {
-        $dsn = 'mysql:host=' . $host . ';dbname=' . $dbname;
+        $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE');
 
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
         ];
 
-        $this->dbh = new PDO($dsn, $user, $pass, $options);
+        $this->dbh = new PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'), $options);
     }
 
     /**
