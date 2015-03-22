@@ -60,10 +60,12 @@ $routeInfo = $dispatcher->dispatch(
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         http_response_code(404);
+        exit('Not Found');
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
         http_response_code(405);
+        exit('Method Not Allowed');
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
