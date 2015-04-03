@@ -18,7 +18,7 @@ class Logger
     {
         if (! self::$instance) {
             self::$instance = new MonologLogger('app');
-            self::$instance->pushHandler(new StreamHandler(ROOT . 'storage/logs/app.log'));
+            self::$instance->pushHandler(new StreamHandler(ROOT . '/storage/logs/app.log'));
         }
 
         return self::$instance;

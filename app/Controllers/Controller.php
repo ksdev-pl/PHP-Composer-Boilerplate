@@ -6,6 +6,6 @@ class Controller
 
     public function __construct()
     {
-        $this->view = new \League\Plates\Engine(VIEWS);
+        $this->view = new \League\Plates\Engine(APP . '/views/');
     }
 }

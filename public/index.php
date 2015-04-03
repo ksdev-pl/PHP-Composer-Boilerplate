@@ -5,14 +5,12 @@
  */
 
 error_reporting(E_ALL);
-
 date_default_timezone_set('UTC');
 
-define('ROOT',  dirname(__DIR__) . '/');
-define('APP',   ROOT . 'app/');
-define('VIEWS', APP . 'views/');
+define('ROOT',  dirname(__DIR__));
+define('APP',   ROOT . '/app/');
 
-require_once ROOT . 'vendor/autoload.php';
+require_once ROOT . '/vendor/autoload.php';
 
 Dotenv::load(ROOT);
 
@@ -46,9 +44,9 @@ $whoops->register();
 
 $dispatcher = FastRoute\cachedDispatcher(
     function (FastRoute\RouteCollector $r) {
-        require_once APP . 'routes.php';
+        require_once APP . '/routes.php';
     }, [
-        'cacheFile' => ROOT . 'storage/cache/routes',
+        'cacheFile' => ROOT . '/storage/cache/routes',
         'cacheDisabled' => getenv('APP_DEBUG') === 'true'
     ]
 );
