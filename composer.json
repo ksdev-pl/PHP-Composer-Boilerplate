@@ -4,6 +4,7 @@
     "minimum-stability": "stable",
     "license": "proprietary",
     "require": {
+        "php" : ">=5.4.0",
         "monolog/monolog": "~1.13",
         "filp/whoops": "~1.1",
         "vlucas/phpdotenv": "~1.1",
