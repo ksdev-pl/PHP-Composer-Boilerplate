@@ -7,12 +7,13 @@
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
-define('ROOT',  dirname(__DIR__));
-define('APP',   ROOT . '/app/');
+define('ROOT', dirname(__DIR__));
+define('APP', ROOT . '/app/');
 
 require_once ROOT . '/vendor/autoload.php';
 
-Dotenv::load(ROOT);
+$dotenv = new Dotenv\Dotenv(ROOT);
+$dotenv->load();
 
 $logger = App\Helpers\Logger::getInstance();
 $whoops = new Whoops\Run;

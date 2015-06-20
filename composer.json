@@ -4,11 +4,11 @@
     "minimum-stability": "stable",
     "license": "proprietary",
     "require": {
-        "php" : ">=5.4.0",
-        "monolog/monolog": "~1.13",
+        "php" : ">=5.5.0",
+        "monolog/monolog": "~1.14",
         "filp/whoops": "~1.1",
-        "vlucas/phpdotenv": "~1.1",
-        "nikic/fast-route": "0.4.*",
+        "vlucas/phpdotenv": "~2.0",
+        "nikic/fast-route": "0.5.*",
         "league/plates": "~3.1"
     },
     "autoload": {
