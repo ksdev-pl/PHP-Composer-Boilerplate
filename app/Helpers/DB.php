@@ -18,7 +18,7 @@ class DB
      * @todo Allow connection to multiple databases - add database number choice to constructor
      * @todo Add logging of queries when debug mode is on
      *
-     * @throws PDOException  Remember to catch this exception. Error could reveal password!
+     * @throws PDOException Remember to catch this exception. Error could reveal password!
      */
     public function __construct()
     {
@@ -49,25 +49,6 @@ class DB
     }
 
     /**
-     * Prepare & execute query
-     *
-     * @param string $query MySQL query with optional placeholders (see below)
-     * @param array $params Array of placeholders with corresponding values ([':placeholder' => $value])
-     *
-     * @throws PDOException  If dbh cannot prepare statement. Depends on ERRMODE_EXCEPTION
-     */
-    private function run($query, $params)
-    {
-        $this->stmt = $this->dbh->prepare($query);
-
-        foreach ($params as $key => &$value) {
-            $this->stmt->bindParam($key, $value);
-        }
-
-        $this->stmt->execute();
-    }
-
-    /**
      * Get all rows from query result
      *
      * @param string $query
@@ -75,7 +56,7 @@ class DB
      *
      * @return array
      */
-    public function select($query, $params = [])
+    public function select($query, array $params = [])
     {
         $this->run($query, $params);
 
@@ -90,7 +71,7 @@ class DB
      *
      * @return array
      */
-    public function selectOne($query, $params = [])
+    public function selectOne($query, array $params = [])
     {
         $this->run($query, $params);
 
@@ -103,9 +84,9 @@ class DB
      * @param string $query
      * @param array $params
      *
-     * @return int  Number of affected rows
+     * @return int Number of affected rows
      */
-    public function insert($query, $params = [])
+    public function insert($query, array $params = [])
     {
         $this->run($query, $params);
 
@@ -118,9 +99,9 @@ class DB
      * @param string $query
      * @param array $params
      *
-     * @return int  Number of affected rows
+     * @return int Number of affected rows
      */
-    public function delete($query, $params = [])
+    public function delete($query, array $params = [])
     {
         $this->run($query, $params);
 
@@ -133,12 +114,31 @@ class DB
      * @param string $query
      * @param array $params
      *
-     * @return int  Number of affected rows
+     * @return int Number of affected rows
      */
-    public function update($query, $params = [])
+    public function update($query, array $params = [])
     {
         $this->run($query, $params);
 
         return $this->stmt->rowCount();
+    }
+
+    /**
+     * Prepare & execute query
+     *
+     * @param string $query SQL query with optional placeholders (see below)
+     * @param array $params Array of placeholders with corresponding values ([':placeholder' => $value])
+     *
+     * @throws PDOException If dbh cannot prepare statement. Depends on ERRMODE_EXCEPTION
+     */
+    private function run($query, array $params)
+    {
+        $this->stmt = $this->dbh->prepare($query);
+
+        foreach ($params as $key => &$value) {
+            $this->stmt->bindParam($key, $value);
+        }
+
+        $this->stmt->execute();
     }
 }
