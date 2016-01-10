@@ -16,6 +16,7 @@ class DB
 
     /**
      * @todo Allow connection to multiple databases - add database number choice to constructor
+     * @todo Add logging of queries when debug mode is on
      *
      * @throws PDOException  Remember to catch this exception. Error could reveal password!
      */
