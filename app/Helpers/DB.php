@@ -56,7 +56,7 @@ class DB
      *
      * @return array
      */
-    public function select($query, array $params = [])
+    public function selectAll($query, array $params = [])
     {
         $this->run($query, $params);
 
