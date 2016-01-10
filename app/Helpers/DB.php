@@ -1,4 +1,6 @@
-<?php namespace App\Helpers;
+<?php
+
+namespace App\Helpers;
 
 use PDO;
 use PDOException;
@@ -6,32 +8,50 @@ use PDOStatement;
 
 class DB
 {
-    /** @var PDO $dbh  Database handle */
+    /** @var PDO $dbh Database handle */
     private $dbh;
 
     /** @var PDOStatement $stmt */
     private $stmt;
 
     /**
+     * @todo Allow connection to multiple databases - add database number choice to constructor
+     *
      * @throws PDOException  Remember to catch this exception. Error could reveal password!
      */
     public function __construct()
     {
-        $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE');
+        switch (getenv('DB_CONNECTION')) {
+            case 'sqlite':
+                $dsn = 'sqlite:' . ROOT . '/storage/database.sqlite';
+                $options = [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                ];
+                $username = null;
+                $password = null;
+                break;
+            case 'mysql':
+                $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_DATABASE');
+                $options = [
+                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+                ];
+                $username = getenv('DB_USERNAME');
+                $password = getenv('DB_PASSWORD');
+                break;
+            default:
+                throw new \Exception('Invalid DB_CONNECTION');
+                break;
+        }
 
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
-        ];
-
-        $this->dbh = new PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'), $options);
+        $this->dbh = new PDO($dsn, $username, $password, $options);
     }
 
     /**
      * Prepare & execute query
      *
-     * @param string $query  MySQL query with optional placeholders (see below)
-     * @param array $params  Array of placeholders with corresponding values ([':placeholder' => $value])
+     * @param string $query MySQL query with optional placeholders (see below)
+     * @param array $params Array of placeholders with corresponding values ([':placeholder' => $value])
      *
      * @throws PDOException  If dbh cannot prepare statement. Depends on ERRMODE_EXCEPTION
      */
