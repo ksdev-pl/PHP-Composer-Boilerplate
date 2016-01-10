@@ -1,4 +1,8 @@
-<?php namespace App\Controllers;
+<?php
+
+namespace App\Controllers;
+
+use App\Helpers\DB;
 
 class PagesController extends Controller
 {
